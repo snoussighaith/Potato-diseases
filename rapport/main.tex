@@ -1,0 +1,2002 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+%================================================
+% 1. PACKAGES
+%================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{microtype}
+
+%================================================
+% 2. MISE EN PAGE
+%================================================
+
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm
+}
+
+\onehalfspacing
+
+\setlength{\parindent}{0.8cm}
+\setlength{\parskip}{4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=blue,
+    pdftitle={Détection des maladies des feuilles de pomme de terre},
+    pdfauthor={Rapport de projet}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Détection des maladies des feuilles de pomme de terre}
+\fancyhead[R]{Rapport de projet}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{15pt}
+
+\renewcommand{\chaptermark}[1]{
+    \markboth{\thechapter.\ #1}{}
+}
+
+\titleformat{\chapter}[display]
+{\normalfont\bfseries\Huge}
+{\chaptertitlename\ \thechapter}
+{15pt}
+{\Huge}
+
+\renewcommand{\arraystretch}{1.3}
+
+%================================================
+% 3. DEBUT DU DOCUMENT
+%================================================
+
+\begin{document}
+
+%================================================
+% PAGE DE GARDE
+%================================================
+
+\begin{titlepage}
+\begin{center}
+
+{\Large République Tunisienne}\\[0.3cm]
+
+{\large Ministère de l'Enseignement Supérieur
+et de la Recherche Scientifique}\\[1cm]
+
+{\Large \textbf{Rapport de Projet}}\\[1cm]
+
+\rule{\textwidth}{1pt}\\[0.4cm]
+
+{\Huge \textbf{Détection des maladies des feuilles
+de pomme de terre par Deep Learning}}\\[0.4cm]
+
+{\Large Classification d'images à l'aide d'un
+réseau de neurones convolutif (CNN)}\\[0.4cm]
+
+\rule{\textwidth}{1pt}\\[1cm]
+
+% Ajouter le logo de l'établissement si disponible
+% \includegraphics[width=3cm]{logo.png}\\[1cm]
+
+\textbf{Réalisé par :}\\[0.2cm]
+Nom et prénom de l'étudiante 1\\
+Nom et prénom de l'étudiante 2\\[0.6cm]
+
+\textbf{Encadré par :}\\
+Nom de l'encadrant\\[1cm]
+
+\textbf{Année universitaire : 2026--2027}
+
+\end{center}
+\end{titlepage}
+
+%================================================
+% PAGES PRELIMINAIRES
+%================================================
+
+\pagenumbering{roman}
+
+\chapter*{Remerciements}
+\addcontentsline{toc}{chapter}{Remerciements}
+
+Nous tenons à exprimer notre profonde gratitude à toutes
+les personnes qui ont contribué, directement ou indirectement,
+à la réalisation de ce projet.
+
+Nous remercions particulièrement notre encadrant pour
+son accompagnement, ses conseils et ses orientations
+tout au long de ce travail.
+
+Nous adressons également nos remerciements à l'ensemble
+de nos enseignants pour les connaissances et les compétences
+qu'ils nous ont transmises durant notre formation.
+
+Enfin, nous remercions toutes les personnes qui nous ont
+soutenus et encouragés dans la réalisation de ce projet.
+
+%------------------------------------------------
+
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+
+Les maladies des plantes constituent un problème important
+pour le secteur agricole, car elles peuvent provoquer une
+diminution de la qualité et du rendement des cultures.
+La pomme de terre est particulièrement exposée à plusieurs
+maladies foliaires, notamment l'Early Blight et le Late Blight.
+
+L'identification de ces maladies repose souvent sur
+l'observation visuelle des feuilles. Cependant, cette méthode
+peut être difficile et nécessite des connaissances spécifiques
+en agriculture.
+
+Dans ce contexte, ce projet vise à développer une approche
+automatique de classification des maladies des feuilles
+de pomme de terre à partir d'images, en utilisant les techniques
+du Deep Learning.
+
+La solution étudiée repose sur un réseau de neurones
+convolutif (CNN), développé avec TensorFlow et Keras.
+Le modèle permet de distinguer trois catégories :
+les feuilles atteintes par l'Early Blight, les feuilles atteintes
+par le Late Blight et les feuilles saines.
+
+Le processus comprend plusieurs étapes : la préparation
+des images, leur redimensionnement, leur normalisation,
+l'application de techniques de Data Augmentation,
+l'entraînement du CNN et l'évaluation de ses performances.
+
+Une étude de l'existant permet également de comparer
+notre approche avec plusieurs travaux scientifiques récents
+portant sur la classification des maladies des plantes.
+
+\textbf{Mots-clés :} Intelligence artificielle, Deep Learning,
+CNN, classification d'images, PlantVillage, pomme de terre,
+Data Augmentation.
+
+%------------------------------------------------
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+Plant diseases represent a major challenge for agriculture
+because they can reduce crop quality and productivity.
+Potato plants are particularly affected by several leaf diseases,
+including Early Blight and Late Blight.
+
+This project focuses on the automatic classification of
+potato leaf diseases using image processing and Deep Learning.
+
+The proposed approach is based on a Convolutional Neural
+Network (CNN) implemented with TensorFlow and Keras.
+The model classifies leaf images into three categories:
+Early Blight, Late Blight and Healthy.
+
+The main stages include image preprocessing, resizing,
+normalization, data augmentation, model training and
+performance evaluation.
+
+\textbf{Keywords:} Artificial Intelligence, Deep Learning,
+CNN, Image Classification, PlantVillage, Potato Diseases.
+
+%------------------------------------------------
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\clearpage
+\pagenumbering{arabic}
+
+%================================================
+% INTRODUCTION GENERALE
+%================================================
+
+\chapter*{Introduction générale}
+\addcontentsline{toc}{chapter}{Introduction générale}
+
+L'agriculture constitue un secteur essentiel pour le
+développement économique et la sécurité alimentaire.
+Cependant, la production agricole est confrontée à plusieurs
+difficultés, parmi lesquelles les maladies des plantes
+occupent une place importante.
+
+Les maladies végétales peuvent affecter différentes parties
+des plantes, notamment les feuilles, les tiges et les racines.
+Lorsqu'elles ne sont pas détectées à temps, elles peuvent
+provoquer des pertes de rendement et une diminution de
+la qualité des produits agricoles.
+
+La pomme de terre (\textit{Solanum tuberosum}) représente
+une culture importante dans de nombreux pays. Elle peut
+être touchée par différentes maladies foliaires, en particulier
+l'Early Blight et le Late Blight. Ces maladies présentent
+des symptômes visibles sur les feuilles, tels que des taches,
+des changements de couleur et des zones nécrosées.
+
+Traditionnellement, le diagnostic repose sur l'observation
+visuelle effectuée par les agriculteurs ou les spécialistes.
+Toutefois, cette méthode dépend de l'expérience de la personne
+et peut devenir difficile lorsque les symptômes sont similaires.
+
+Avec les progrès de l'intelligence artificielle, et plus
+particulièrement du Deep Learning, de nouvelles solutions
+permettent d'automatiser l'analyse des images.
+Les réseaux de neurones convolutifs (CNN) sont notamment
+utilisés pour reconnaître les caractéristiques visuelles
+et classifier automatiquement les images.
+
+Dans ce contexte, notre projet porte sur la détection
+et la classification des maladies des feuilles de pomme
+de terre à partir d'images en utilisant un modèle CNN.
+
+Le travail s'appuie sur un projet de référence disponible
+sur GitHub, consacré à la classification des maladies
+de la pomme de terre avec TensorFlow et Keras.
+
+Notre démarche consiste à étudier et adapter cette approche,
+à comprendre les différentes étapes de son fonctionnement,
+à préparer les données et à analyser les performances
+du modèle.
+
+Le rapport est organisé en six chapitres.
+Le premier présente la problématique et les objectifs.
+Le deuxième est consacré à l'étude de l'existant et aux
+travaux scientifiques récents.
+Le troisième présente les méthodologies CRISP-DM et
+CRISP-ML(Q). Le quatrième décrit le dataset et sa préparation.
+Le cinquième présente la conception et l'entraînement du CNN.
+Enfin, le sixième chapitre est consacré à l'évaluation
+des performances et à l'analyse des résultats.
+
+%================================================
+% CHAPITRE 1
+%================================================
+
+\chapter{Problématique et objectifs}
+
+\section{Contexte du projet}
+
+L'agriculture joue un rôle fondamental dans la satisfaction
+des besoins alimentaires et dans le développement économique.
+Toutefois, les cultures agricoles sont exposées à plusieurs
+maladies susceptibles d'affecter leur croissance et leur
+productivité.
+
+La pomme de terre est particulièrement concernée par
+différentes maladies foliaires. Parmi les plus fréquentes,
+on distingue l'Early Blight et le Late Blight.
+
+L'Early Blight se manifeste généralement par l'apparition
+de taches brunes sur les feuilles, souvent caractérisées
+par des anneaux concentriques. Le Late Blight peut provoquer
+des zones sombres et des lésions qui se développent rapidement,
+notamment dans des conditions environnementales favorables
+au développement de la maladie.
+
+La détection précoce de ces maladies est importante afin
+de limiter leur propagation et de réduire les pertes agricoles.
+
+Cependant, l'identification manuelle des symptômes peut
+être difficile, particulièrement lorsque les maladies
+présentent des caractéristiques visuelles proches.
+
+L'intelligence artificielle offre une possibilité intéressante
+pour automatiser cette tâche. Grâce à la vision par ordinateur
+et aux réseaux de neurones convolutifs, il devient possible
+d'analyser les images des feuilles et d'apprendre les
+caractéristiques associées à chaque maladie.
+
+Notre projet s'inscrit donc dans le domaine de l'agriculture
+intelligente et vise à utiliser le Deep Learning pour
+faciliter la reconnaissance des maladies des feuilles
+de pomme de terre.
+
+\section{Problématique}
+
+Le diagnostic des maladies des plantes constitue une tâche
+importante, mais qui présente plusieurs difficultés.
+
+Premièrement, l'identification manuelle nécessite une
+connaissance des symptômes et de leurs différences.
+Deuxièmement, certaines maladies peuvent présenter des
+signes visuels similaires, ce qui augmente le risque
+d'erreur de diagnostic.
+
+De plus, l'analyse d'un grand nombre d'images peut demander
+beaucoup de temps. Une solution automatique pourrait donc
+faciliter cette opération et aider à obtenir un premier
+diagnostic à partir d'une photographie.
+
+La problématique principale de notre projet est formulée
+comme suit :
+
+\begin{quote}
+\textit{Comment concevoir un système intelligent basé sur
+le Deep Learning, capable d'identifier automatiquement
+les maladies des feuilles de pomme de terre à partir
+d'images et de distinguer les feuilles saines des feuilles
+atteintes par différentes maladies ?}
+\end{quote}
+
+\section{Objectif général}
+
+L'objectif général de ce projet est de développer et d'étudier
+un système de classification automatique des maladies
+des feuilles de pomme de terre en utilisant un réseau
+de neurones convolutif (CNN).
+
+Le système doit être capable d'analyser une image en entrée
+et de déterminer la catégorie correspondante parmi trois
+classes : Early Blight, Late Blight et Healthy.
+
+\section{Objectifs spécifiques}
+
+Pour atteindre cet objectif général, plusieurs objectifs
+spécifiques ont été définis :
+
+\begin{itemize}
+    \item Étudier les maladies foliaires de la pomme de terre
+    et leurs caractéristiques visuelles.
+    \item Explorer un dataset d'images contenant des feuilles
+    saines et malades.
+    \item Organiser les images selon leurs catégories.
+    \item Effectuer le prétraitement des images.
+    \item Appliquer des techniques de Data Augmentation
+    afin d'augmenter la diversité des données d'entraînement.
+    \item Construire un modèle de classification basé sur
+    un réseau de neurones convolutif.
+    \item Entraîner le modèle à reconnaître les trois classes.
+    \item Évaluer les performances à l'aide de métriques
+    adaptées à la classification.
+    \item Étudier les possibilités d'utilisation du modèle
+    dans une application de diagnostic agricole.
+\end{itemize}
+
+\section{Résultats attendus}
+
+À la fin du projet, nous cherchons à obtenir un modèle
+capable de classifier automatiquement les images des
+feuilles de pomme de terre.
+
+Les résultats attendus sont les suivants :
+
+\begin{itemize}
+    \item Un dataset organisé et préparé pour l'apprentissage.
+    \item Un modèle CNN entraîné sur les images disponibles.
+    \item Une classification en trois catégories.
+    \item Une évaluation quantitative du modèle.
+    \item Une analyse des erreurs de classification.
+    \item Une base pour le développement d'un système
+    d'aide au diagnostic des maladies des plantes.
+\end{itemize}
+
+Il est important de préciser que les performances réelles
+du modèle seront déterminées à partir des expériences
+d'entraînement et de test. Elles ne peuvent pas être
+annoncées avant l'exécution et l'évaluation du modèle.
+
+%================================================
+% CHAPITRE 2
+%================================================
+
+\chapter{État de l'art et bibliographie}
+
+\section{Introduction}
+
+La détection automatique des maladies des plantes à partir
+d'images représente un domaine de recherche important
+en intelligence artificielle appliquée à l'agriculture.
+
+Les premières approches reposaient principalement sur
+le traitement d'images et l'extraction manuelle de
+caractéristiques visuelles. Avec le développement du
+Machine Learning et du Deep Learning, les chercheurs
+ont progressivement proposé des méthodes capables
+d'apprendre automatiquement les caractéristiques des images.
+
+Dans le cas des maladies de la pomme de terre, plusieurs
+travaux récents se sont intéressés à la reconnaissance
+de l'Early Blight, du Late Blight et des feuilles saines.
+
+Cette partie présente trois études scientifiques récentes
+qui permettent de comprendre les principales approches
+existantes et de positionner notre travail par rapport
+à ces recherches.
+
+\section{Première étude : Talab et al. (2024)}
+
+\subsection{Présentation de l'étude}
+
+Dans leur article intitulé :
+
+\textit{Investigating the accuracy of classification in
+unbalanced data in order to diagnose two common potato
+leaf diseases (early blight and late blight) using image
+processing and machine learning},
+
+Talab, Mohammadzamani et Parashkoohi (2024) étudient
+la classification des maladies des feuilles de pomme
+de terre en présence d'un déséquilibre entre les classes.
+
+Les auteurs s'intéressent à trois catégories :
+Early Blight, Late Blight et Healthy.
+
+\subsection{Méthode utilisée}
+
+Contrairement aux approches basées directement sur
+l'apprentissage profond, cette étude utilise une méthode
+fondée sur le traitement d'images et l'extraction
+de caractéristiques.
+
+Les auteurs commencent par isoler les régions affectées
+des feuilles, puis extraient plusieurs types de caractéristiques :
+
+\begin{itemize}
+    \item 45 caractéristiques de couleur.
+    \item 99 caractéristiques de texture.
+    \item 6 caractéristiques de forme.
+\end{itemize}
+
+Les caractéristiques sont extraites à partir de plusieurs
+espaces colorimétriques, notamment RGB, Lab et HSV.
+
+Ensuite, l'algorithme Random Forest est utilisé pour
+classifier les images à partir des caractéristiques extraites.
+
+Les auteurs étudient également l'effet du déséquilibre
+des données en utilisant des techniques d'Over-Sampling
+et d'Under-Sampling.
+
+\subsection{Résultats obtenus}
+
+Les résultats rapportés dans l'article montrent que
+l'équilibrage des données peut améliorer les performances
+de classification.
+
+Les précisions obtenues sont présentées dans le tableau
+suivant :
+
+\begin{table}[H]
+\centering
+\caption{Résultats de Talab et al. (2024)}
+\begin{tabular}{lc}
+\toprule
+\textbf{Configuration} & \textbf{Accuracy (\%)}\\
+\midrule
+Dataset original & 87.89\\
+Over-Sampling & 91.09\\
+Under-Sampling & 96.17\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Limites de l'étude}
+
+Cette approche nécessite une étape d'extraction manuelle
+des caractéristiques avant la classification.
+
+La qualité des caractéristiques sélectionnées peut donc
+influencer directement les performances du système.
+
+De plus, l'utilisation d'un algorithme classique de
+Machine Learning dépend de la capacité des caractéristiques
+extraites à représenter correctement les différences
+entre les maladies.
+
+\section{Deuxième étude : Alhammad et al. (2025)}
+
+\subsection{Présentation de l'étude}
+
+Dans leur article intitulé :
+
+\textit{Deep learning and explainable AI for classification
+of potato leaf diseases},
+
+Alhammad et ses collaborateurs proposent une approche
+basée sur le Deep Learning pour classifier les maladies
+des feuilles de pomme de terre.
+
+Le travail combine l'utilisation d'un modèle pré-entraîné
+et des techniques d'Intelligence Artificielle Explicable
+(Explainable Artificial Intelligence - XAI).
+
+L'objectif est non seulement d'obtenir une classification,
+mais également de mieux comprendre les régions de l'image
+qui influencent la décision du modèle.
+
+\subsection{Méthode utilisée}
+
+Les auteurs utilisent un dataset dérivé de PlantVillage,
+composé de 2\,152 images réparties en trois catégories :
+
+\begin{itemize}
+    \item 1\,000 images Early Blight.
+    \item 1\,000 images Late Blight.
+    \item 152 images Healthy.
+\end{itemize}
+
+Afin de réduire les effets du déséquilibre entre les classes,
+des techniques d'augmentation sont utilisées, notamment
+la rotation, le changement d'échelle, le retournement
+et la translation verticale.
+
+La méthode repose sur le Transfer Learning, qui permet
+d'utiliser les connaissances acquises par un réseau
+pré-entraîné pour réaliser une nouvelle tâche de classification.
+
+Les auteurs utilisent également Grad-CAM afin de visualiser
+les régions de l'image ayant contribué à la prédiction.
+
+\subsection{Résultats obtenus}
+
+L'étude rapporte les résultats suivants :
+
+\begin{itemize}
+    \item Accuracy de validation : 97\%.
+    \item Accuracy de test : 98\%.
+\end{itemize}
+
+L'utilisation de Grad-CAM permet également de fournir
+une représentation visuelle des zones importantes
+pour la classification.
+
+\subsection{Limites de l'étude}
+
+L'utilisation d'un modèle pré-entraîné peut améliorer
+les performances, mais nécessite de gérer correctement
+le choix de l'architecture et les paramètres de
+fine-tuning.
+
+Par ailleurs, l'utilisation de Grad-CAM améliore
+l'interprétabilité, mais ne garantit pas à elle seule
+que la prédiction soit toujours correcte.
+
+\section{Troisième étude : Bhavani et Chalapathi (2026)}
+
+\subsection{Présentation de l'étude}
+
+Dans l'article intitulé :
+
+\textit{PotatoLeafNet: two-stage convolutional neural
+networks for effective Potato Leaf disease identification
+and classification},
+
+Bhavani et Chalapathi proposent une architecture de
+Deep Learning dédiée à l'identification des maladies
+des feuilles de pomme de terre.
+
+Le travail porte sur les trois catégories principales :
+Healthy, Early Blight et Late Blight.
+
+\subsection{Méthode utilisée}
+
+Les auteurs proposent une approche qui associe une
+stratégie d'augmentation des images à un réseau CNN
+compact composé de onze couches.
+
+Le dataset étudié contient 4\,072 images réparties
+en trois catégories.
+
+Les images sont redimensionnées à 224 $\times$ 224 pixels
+et normalisées dans l'intervalle [0,1].
+
+La stratégie de Data Augmentation comprend plusieurs
+transformations :
+
+\begin{itemize}
+    \item Rotation.
+    \item Translation.
+    \item Shear.
+    \item Zoom.
+    \item Retournement horizontal.
+    \item Modification de la luminosité.
+    \item Modification des canaux de couleur.
+\end{itemize}
+
+Ces transformations sont appliquées aux données
+d'entraînement afin d'augmenter leur diversité.
+
+Le modèle est développé avec TensorFlow et Keras,
+et utilise l'optimiseur Adam ainsi qu'une fonction
+de perte Categorical Crossentropy.
+
+\subsection{Résultats obtenus}
+
+Les auteurs rapportent les performances suivantes
+sur le jeu de test :
+
+\begin{itemize}
+    \item Accuracy : 98.52\%.
+    \item Macro-Precision : 98.67\%.
+    \item Macro-Recall : 99.67\%.
+    \item Macro-F1-score : 99.16\%.
+\end{itemize}
+
+Ces résultats montrent l'intérêt de combiner
+une architecture CNN adaptée avec une stratégie
+d'augmentation des données.
+
+\subsection{Limites de l'étude}
+
+Malgré les résultats obtenus sur le dataset utilisé,
+la généralisation à des images prises directement
+dans les champs reste un défi.
+
+Les conditions réelles peuvent introduire des variations
+de luminosité, des arrière-plans complexes, des feuilles
+partiellement cachées et des différences entre les variétés
+de pommes de terre.
+
+Une validation complémentaire sur des images provenant
+de conditions réelles est donc importante.
+
+\section{Comparaison des études scientifiques}
+
+Les trois études précédentes utilisent des approches
+différentes pour résoudre le même problème général.
+
+Le tableau suivant présente une comparaison synthétique.
+
+\begin{table}[H]
+\centering
+\caption{Comparaison des travaux scientifiques}
+\small
+\begin{tabularx}{\textwidth}{p{2.5cm}p{2.3cm}X p{2cm}}
+\toprule
+\textbf{Étude} &
+\textbf{Approche} &
+\textbf{Caractéristiques principales} &
+\textbf{Résultat rapporté}\\
+\midrule
+
+Talab et al. (2024) &
+Random Forest &
+Extraction de caractéristiques de couleur, texture
+et forme. Étude du déséquilibre des classes. &
+96.17\% avec Under-Sampling\\
+
+Alhammad et al. (2025) &
+Transfer Learning et XAI &
+Utilisation d'un réseau pré-entraîné, augmentation
+des images et visualisation Grad-CAM. &
+98\% sur le test\\
+
+Bhavani et Chalapathi (2026) &
+CNN personnalisé &
+CNN de onze couches et augmentation séquentielle
+des images. &
+98.52\% sur le test\\
+
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textit{Remarque : les performances présentées proviennent
+des articles respectifs. Les datasets, les partitions
+et les protocoles d'évaluation ne sont pas nécessairement
+identiques. Les valeurs ne constituent donc pas une
+comparaison expérimentale directe entre les modèles.}
+
+\section{Analyse comparative}
+
+L'analyse des travaux scientifiques permet de dégager
+plusieurs observations.
+
+Premièrement, les méthodes classiques de Machine Learning,
+comme Random Forest, peuvent obtenir de bons résultats
+lorsque les caractéristiques de couleur, de texture
+et de forme sont correctement extraites.
+
+Cependant, elles nécessitent une étape préalable de
+conception et de sélection des caractéristiques.
+
+Deuxièmement, les approches basées sur le Transfer Learning
+permettent de réutiliser des caractéristiques apprises
+sur de grandes bases d'images. Elles peuvent être
+particulièrement utiles lorsque les données disponibles
+sont limitées.
+
+Troisièmement, les CNN personnalisés peuvent apprendre
+directement les caractéristiques visuelles à partir
+des images. L'ajout de techniques de Data Augmentation
+peut améliorer la diversité des exemples présentés
+pendant l'entraînement.
+
+Les travaux étudiés montrent également que la qualité
+et la diversité du dataset jouent un rôle important.
+Un modèle performant sur des images prises dans un
+environnement contrôlé ne garantit pas nécessairement
+les mêmes performances dans des conditions agricoles réelles.
+
+\section{Solutions commerciales existantes}
+
+En complément des recherches scientifiques, plusieurs
+applications commerciales utilisent l'intelligence
+artificielle pour aider les agriculteurs à identifier
+les problèmes affectant leurs cultures.
+
+\subsection{Plantix}
+
+Plantix est une application destinée au diagnostic
+des problèmes rencontrés par les plantes.
+
+Elle permet à l'utilisateur de prendre ou de télécharger
+une photographie d'une plante afin d'obtenir une
+identification du problème.
+
+L'application propose également des informations sur
+les symptômes, la prévention et les possibilités
+de traitement.
+
+Plantix illustre ainsi l'intérêt de combiner la
+reconnaissance d'images avec des informations agricoles
+destinées à accompagner l'utilisateur.
+
+\subsection{Agrio}
+
+Agrio est une solution numérique destinée à la surveillance
+et à la protection des cultures.
+
+Elle propose notamment l'identification des maladies,
+des ravageurs et des problèmes nutritionnels à partir
+de photographies.
+
+La plateforme fournit également des suggestions
+d'intervention et des outils de suivi des cultures.
+
+\subsection{Comparaison des solutions commerciales}
+
+\begin{table}[H]
+\centering
+\caption{Comparaison des solutions commerciales}
+\begin{tabularx}{\textwidth}{p{2.5cm}X X}
+\toprule
+\textbf{Critère} & \textbf{Plantix} & \textbf{Agrio}\\
+\midrule
+Diagnostic par image &
+Oui &
+Oui\\
+
+Identification des maladies &
+Oui &
+Oui\\
+
+Informations et conseils &
+Symptômes, prévention et traitements &
+Identification et suggestions de solutions\\
+
+Suivi agricole &
+Informations et communauté &
+Suivi des cultures, alertes et outils agricoles\\
+
+Objectif principal &
+Aider à identifier et traiter les problèmes des plantes &
+Accompagner la surveillance et la protection des cultures\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Ces solutions montrent que la valeur d'un système agricole
+intelligent ne se limite pas à reconnaître une maladie.
+Il est également important de présenter des informations
+compréhensibles et des recommandations utiles.
+
+\section{Positionnement de notre projet}
+
+Après l'étude des travaux scientifiques et des solutions
+commerciales, nous avons choisi de nous orienter vers
+une approche basée sur un réseau de neurones convolutif
+(CNN).
+
+Notre projet s'appuie sur une architecture CNN développée
+avec TensorFlow et Keras. Le modèle apprend directement
+à partir des images et permet de classifier les feuilles
+en trois catégories.
+
+Contrairement à l'approche de Talab et al. (2024), qui
+nécessite l'extraction de caractéristiques manuelles
+avant l'utilisation de Random Forest, notre approche
+utilise un réseau capable d'apprendre automatiquement
+les caractéristiques visuelles.
+
+Par rapport à l'étude d'Alhammad et al. (2025), notre
+travail adopte une architecture CNN personnalisée,
+sans présenter le Transfer Learning ou Grad-CAM comme
+des éléments déjà intégrés dans notre implémentation.
+
+Enfin, les travaux de Bhavani et Chalapathi (2026)
+montrent l'intérêt des CNN personnalisés et de
+l'augmentation des données, ce qui rejoint les principes
+de notre démarche.
+
+\subsection{Valeur ajoutée de notre projet}
+
+La valeur ajoutée de notre projet repose sur plusieurs
+éléments complémentaires :
+
+\begin{enumerate}
+    \item \textbf{Une approche simple et reproductible :}
+    l'utilisation d'un CNN construit avec TensorFlow
+    et Keras permet de disposer d'une architecture
+    compréhensible et réutilisable.
+
+    \item \textbf{Une classification ciblée :}
+    le système se concentre sur trois catégories importantes
+    pour la pomme de terre : Early Blight, Late Blight
+    et Healthy.
+
+    \item \textbf{Une préparation des images adaptée :}
+    le redimensionnement, la normalisation et la
+    Data Augmentation permettent de préparer les images
+    et d'augmenter la diversité des données d'entraînement.
+
+    \item \textbf{Une interprétation plus utile de la prédiction :}
+    au-delà du nom de la classe, une évolution possible
+    consiste à afficher le niveau de confiance associé
+    à la prédiction et à signaler les cas incertains.
+
+    \item \textbf{Une aide à la décision agricole :}
+    une extension envisagée consiste à associer chaque
+    maladie détectée à une fiche contenant les symptômes,
+    les mesures préventives et des recommandations
+    agricoles documentées.
+\end{enumerate}
+
+Il convient de distinguer les fonctionnalités réellement
+implémentées des améliorations proposées.
+
+Le modèle CNN et la préparation des images constituent
+la base technique du travail. Le module de recommandations
+et la gestion des prédictions incertaines représentent
+une extension fonctionnelle à développer et à valider.
+
+Notre contribution ne consiste donc pas à proposer
+une nouvelle architecture de réseau de neurones, mais
+à construire une solution de classification ciblée,
+à étudier son fonctionnement et à proposer son
+enrichissement par des informations utiles à l'utilisateur.
+
+%================================================
+% CHAPITRE 3
+%================================================
+
+\chapter{Méthodologie CRISP-DM et CRISP-ML(Q)}
+
+\section{Introduction}
+
+La réalisation d'un projet de Machine Learning nécessite
+une démarche organisée permettant de passer de la
+compréhension du problème à la construction et à
+l'évaluation du modèle.
+
+Dans ce projet, nous nous appuyons principalement sur
+la méthodologie CRISP-DM et sur les principes de
+CRISP-ML(Q).
+
+Ces méthodologies permettent de structurer les différentes
+étapes du développement et de prendre en compte
+la qualité des données, la qualité du modèle et son
+suivi après son déploiement.
+
+\section{Présentation de CRISP-DM}
+
+CRISP-DM signifie \textit{Cross-Industry Standard Process
+for Data Mining}.
+
+Il s'agit d'une méthodologie organisée en six phases
+permettant de structurer un projet de traitement
+et d'analyse des données.
+
+Les six phases sont :
+
+\begin{enumerate}
+    \item Business Understanding.
+    \item Data Understanding.
+    \item Data Preparation.
+    \item Modeling.
+    \item Evaluation.
+    \item Deployment.
+\end{enumerate}
+
+\section{Présentation de CRISP-ML(Q)}
+
+CRISP-ML(Q) est une méthodologie destinée aux projets
+de Machine Learning qui met l'accent sur la qualité
+tout au long du cycle de vie du modèle.
+
+Elle prend en compte les différentes étapes de conception,
+de préparation, d'entraînement, d'évaluation, de déploiement
+et de maintenance.
+
+Son intérêt est de ne pas considérer l'entraînement
+comme la seule étape importante. La qualité des données,
+la reproductibilité, le suivi et la surveillance du modèle
+doivent également être pris en considération.
+
+\section{Justification du choix des méthodologies}
+
+Le choix de CRISP-DM est justifié par sa structure
+progressive et sa capacité à organiser les différentes
+étapes d'un projet basé sur les données.
+
+Dans notre cas, il permet de passer de la compréhension
+du problème agricole à l'exploration du dataset, puis
+à la préparation des images et à l'entraînement du CNN.
+
+CRISP-ML(Q) complète cette démarche en mettant l'accent
+sur la qualité du processus et la surveillance du modèle.
+
+L'utilisation de ces deux méthodologies permet donc
+d'obtenir une démarche structurée et adaptée à notre
+projet de classification d'images.
+
+\section{Application de CRISP-DM à notre projet}
+
+\subsection{Compréhension du besoin}
+
+La première phase consiste à comprendre le problème
+à résoudre.
+
+Notre objectif est de faciliter l'identification des
+maladies des feuilles de pomme de terre à partir d'images.
+
+Le système doit distinguer trois catégories :
+Early Blight, Late Blight et Healthy.
+
+\subsection{Compréhension des données}
+
+Cette phase consiste à étudier les données disponibles.
+
+Nous utilisons un ensemble d'images consacré aux maladies
+des feuilles de pomme de terre, issu du dataset PlantVillage.
+
+L'exploration permet de comprendre :
+
+\begin{itemize}
+    \item La structure des dossiers.
+    \item Le nombre d'images disponibles.
+    \item Les différentes catégories.
+    \item La distribution des images entre les classes.
+    \item Les caractéristiques visuelles des feuilles.
+\end{itemize}
+
+\subsection{Préparation des données}
+
+Cette étape consiste à préparer les images pour leur
+utilisation dans le réseau CNN.
+
+Elle comprend le redimensionnement, la normalisation
+et l'application de transformations d'augmentation
+aux données d'entraînement.
+
+\subsection{Modélisation}
+
+La phase de modélisation consiste à construire le réseau
+de neurones convolutif et à définir ses paramètres.
+
+Le modèle est développé avec TensorFlow et Keras.
+Il apprend à reconnaître les caractéristiques visuelles
+associées aux trois classes.
+
+\subsection{Évaluation}
+
+L'évaluation permet de mesurer la qualité des prédictions
+du modèle à l'aide de plusieurs métriques, notamment
+l'Accuracy, la Precision, le Recall et le F1-score.
+
+Une matrice de confusion permet également d'analyser
+les erreurs de classification entre les catégories.
+
+\subsection{Déploiement}
+
+La dernière phase concerne l'utilisation du modèle
+dans un environnement permettant de réaliser des
+prédictions sur de nouvelles images.
+
+Le dépôt GitHub de référence présente une architecture
+plus complète qui comprend notamment une API, une
+interface Web et une application mobile.
+
+Dans le cadre de notre travail, les composants effectivement
+réalisés et testés doivent être distingués des composants
+présents uniquement dans le dépôt de référence.
+
+\section{Application des principes CRISP-ML(Q)}
+
+Les principes de CRISP-ML(Q) peuvent être appliqués
+à notre projet de la manière suivante :
+
+\begin{itemize}
+    \item \textbf{Qualité des données :} vérifier les
+    étiquettes, les dimensions et la cohérence des images.
+
+    \item \textbf{Qualité de la préparation :} s'assurer
+    que les transformations ne modifient pas la classe
+    réelle de la feuille.
+
+    \item \textbf{Qualité du modèle :} surveiller
+    l'apprentissage et détecter un éventuel surapprentissage.
+
+    \item \textbf{Qualité de l'évaluation :} utiliser
+    des données indépendantes pour mesurer les performances.
+
+    \item \textbf{Qualité du déploiement :} vérifier
+    que les nouvelles images sont correctement préparées
+    avant la prédiction.
+
+    \item \textbf{Maintenance :} prévoir la mise à jour
+    du dataset et le réentraînement du modèle lorsque
+    de nouvelles données représentatives sont disponibles.
+\end{itemize}
+
+\section{Cycle de vie et maintenance du modèle}
+
+Un modèle de Deep Learning ne doit pas être considéré
+comme une solution définitive.
+
+Les conditions agricoles peuvent évoluer et de nouvelles
+variétés de plantes ou de nouveaux symptômes peuvent
+apparaître.
+
+Il est donc nécessaire de prévoir :
+
+\begin{itemize}
+    \item L'ajout de nouvelles images.
+    \item La vérification des étiquettes.
+    \item Le suivi des performances.
+    \item L'analyse des erreurs de prédiction.
+    \item Le réentraînement lorsque cela est nécessaire.
+\end{itemize}
+
+Ces opérations contribuent à maintenir la qualité
+et la pertinence du système.
+
+%================================================
+% CHAPITRE 4
+%================================================
+
+\chapter{Présentation et préparation du dataset}
+
+\section{Présentation du dataset PlantVillage}
+
+Le dataset utilisé dans notre projet est consacré
+à la reconnaissance des maladies des plantes à partir
+d'images de feuilles.
+
+Le projet de référence indique le téléchargement des
+données depuis Kaggle, puis la conservation des dossiers
+correspondant à la pomme de terre.
+
+La version classique du sous-ensemble Potato de PlantVillage
+utilisée dans plusieurs études comprend 2\,152 images
+réparties en trois classes.
+
+La distribution est la suivante :
+
+\begin{table}[H]
+\centering
+\caption{Répartition des images du dataset Potato}
+\begin{tabular}{lc}
+\toprule
+\textbf{Classe} & \textbf{Nombre d'images}\\
+\midrule
+Potato Early Blight & 1\,000\\
+Potato Late Blight & 1\,000\\
+Potato Healthy & 152\\
+\midrule
+\textbf{Total} & \textbf{2\,152}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{Important : cette répartition correspond à la
+version classique de 2\,152 images. Le nombre exact doit
+être confirmé par le comptage des fichiers présents
+dans le dataset réellement utilisé pour l'entraînement.}
+
+\section{Structure du dataset}
+
+Les images sont organisées en dossiers correspondant
+aux différentes classes.
+
+Chaque dossier contient les images associées à une
+catégorie précise.
+
+Cette organisation facilite le chargement automatique
+des images et l'attribution des étiquettes nécessaires
+à l'apprentissage supervisé.
+
+\section{Présentation des classes}
+
+\subsection{Potato Early Blight}
+
+L'Early Blight est une maladie foliaire qui peut provoquer
+des taches brunes sur les feuilles.
+
+Ces taches peuvent présenter des anneaux concentriques
+caractéristiques. La reconnaissance de ces motifs
+visuels constitue un élément important pour la classification.
+
+\subsection{Potato Late Blight}
+
+Le Late Blight est une maladie qui peut entraîner
+l'apparition de lésions sombres sur les feuilles.
+Son développement peut être rapide lorsque les conditions
+environnementales sont favorables.
+
+\subsection{Potato Healthy}
+
+Cette catégorie regroupe les images de feuilles saines,
+ne présentant pas les symptômes caractéristiques
+des deux maladies précédentes.
+
+\section{Analyse exploratoire des images}
+
+L'analyse exploratoire permet de visualiser les images
+et de comprendre les différences entre les catégories.
+
+Elle permet notamment d'observer :
+
+\begin{itemize}
+    \item Les différences de couleur.
+    \item Les formes des taches.
+    \item Les textures présentes sur les feuilles.
+    \item Les variations d'orientation.
+    \item Les différences de taille et de qualité des images.
+\end{itemize}
+
+% Ajouter ici des exemples d'images des trois classes.
+%
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.8\textwidth]{classes.png}
+% \caption{Exemples des trois catégories du dataset}
+% \end{figure}
+
+\section{Répartition des données}
+
+Pour entraîner et évaluer le réseau, les données doivent
+être organisées en ensembles distincts.
+
+\begin{itemize}
+    \item \textbf{Training :} utilisé pour apprendre
+    les paramètres du réseau.
+    \item \textbf{Validation :} utilisé pour suivre
+    l'apprentissage et contrôler la généralisation.
+    \item \textbf{Test :} utilisé pour mesurer les
+    performances finales sur des images non utilisées
+    pendant l'entraînement.
+\end{itemize}
+
+La répartition exacte doit suivre les paramètres
+du notebook utilisé.
+
+Il est important de conserver une séparation indépendante
+des données afin d'éviter que des images utilisées
+pendant l'entraînement se retrouvent dans le jeu de test.
+
+\section{Prétraitement des images}
+
+Avant leur utilisation dans le CNN, les images doivent
+être transformées afin de respecter un format commun.
+
+\subsection{Redimensionnement}
+
+Les images sont redimensionnées à une taille fixe
+de 256 $\times$ 256 pixels.
+
+Cette opération permet de garantir que toutes les images
+présentent les mêmes dimensions et peuvent être regroupées
+dans des lots pendant l'entraînement.
+
+\subsection{Normalisation}
+
+Les valeurs des pixels sont initialement comprises
+entre 0 et 255.
+
+La normalisation consiste à diviser chaque valeur
+par 255 afin d'obtenir des valeurs comprises entre
+0 et 1.
+
+La formule utilisée est :
+
+\[
+X_{\text{normalisé}} = \frac{X}{255}
+\]
+
+Cette transformation facilite le traitement numérique
+des images et contribue à stabiliser l'apprentissage.
+
+\section{Data Augmentation}
+
+\subsection{Définition}
+
+La Data Augmentation est une technique qui permet
+d'augmenter la diversité des images d'entraînement
+en appliquant différentes transformations aux images
+existantes.
+
+L'objectif est de présenter au réseau des variations
+des mêmes exemples afin qu'il apprenne à reconnaître
+les caractéristiques importantes indépendamment
+de certaines transformations visuelles.
+
+Cette technique peut contribuer à limiter le surapprentissage
+et à améliorer la capacité de généralisation du modèle.
+
+\subsection{RandomFlip}
+
+RandomFlip est une transformation qui permet de retourner
+aléatoirement les images horizontalement et verticalement.
+
+Elle aide le réseau à apprendre que l'orientation d'une
+feuille ne doit pas nécessairement modifier sa catégorie.
+
+\subsection{RandomRotation}
+
+RandomRotation applique une rotation aléatoire aux images.
+
+Dans le code de référence, le facteur de rotation
+est fixé à 0.2.
+
+Cette transformation permet de présenter au réseau
+des feuilles ayant différentes orientations.
+
+\subsection{Implémentation de la Data Augmentation}
+
+Le code utilisé dans le notebook repose sur les couches
+de prétraitement de TensorFlow/Keras.
+
+\begin{verbatim}
+data_augmentation = tf.keras.Sequential([
+    layers.experimental.preprocessing.RandomFlip(
+        "horizontal_and_vertical"
+    ),
+    layers.experimental.preprocessing.RandomRotation(0.2),
+])
+\end{verbatim}
+
+Les transformations sont appliquées aux images
+d'entraînement.
+
+Les données de validation et de test doivent rester
+indépendantes des transformations aléatoires utilisées
+pour enrichir l'entraînement.
+
+\section{Synthèse de la préparation des données}
+
+Les différentes opérations réalisées avant l'entraînement
+sont résumées dans le tableau suivant.
+
+\begin{table}[H]
+\centering
+\caption{Synthèse des opérations de préparation}
+\begin{tabularx}{\textwidth}{p{3cm}X}
+\toprule
+\textbf{Opération} & \textbf{Description}\\
+\midrule
+Chargement &
+Lecture des images organisées par classe.\\
+
+Redimensionnement &
+Conversion des images à une taille de 256 $\times$ 256 pixels.\\
+
+Normalisation &
+Transformation des valeurs des pixels dans l'intervalle [0,1].\\
+
+RandomFlip &
+Retournement horizontal et vertical aléatoire.\\
+
+RandomRotation &
+Rotation aléatoire des images.\\
+
+Organisation &
+Préparation des ensembles d'entraînement, de validation
+et de test.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%================================================
+% CHAPITRE 5
+%================================================
+
+\chapter{Modélisation et implémentation du CNN}
+
+\section{Introduction}
+
+Après la préparation du dataset, l'étape suivante consiste
+à construire un modèle capable d'apprendre les caractéristiques
+visuelles des feuilles de pomme de terre.
+
+Pour réaliser cette tâche, nous utilisons un réseau
+de neurones convolutif (CNN).
+
+Ce type de réseau est particulièrement adapté au traitement
+des images, car il permet d'extraire automatiquement
+des caractéristiques telles que les contours, les textures,
+les formes et les motifs visuels.
+
+Le modèle est développé avec TensorFlow et Keras.
+
+\section{Présentation du modèle CNN}
+
+Un réseau de neurones convolutif est une architecture
+de Deep Learning conçue pour traiter des données
+structurées sous forme de grilles, notamment les images.
+
+Contrairement aux méthodes qui nécessitent une extraction
+manuelle des caractéristiques, le CNN apprend automatiquement
+les représentations nécessaires à partir des images
+d'entraînement.
+
+Le réseau est organisé en plusieurs couches qui réalisent
+successivement l'extraction des caractéristiques et
+la classification.
+
+\section{Architecture générale du CNN}
+
+Le modèle utilisé dans le notebook repose sur une
+architecture séquentielle de type Sequential.
+
+Il comprend des couches de convolution et de pooling,
+suivies de couches entièrement connectées pour réaliser
+la classification.
+
+Le modèle reçoit une image de taille 256 $\times$ 256
+avec trois canaux de couleur RGB.
+
+L'architecture comprend notamment :
+
+\begin{itemize}
+    \item Des couches Conv2D pour extraire les caractéristiques.
+    \item Des couches MaxPooling2D pour réduire les dimensions.
+    \item Une couche Flatten pour transformer les
+    caractéristiques en vecteur.
+    \item Une couche Dense pour réaliser la classification.
+    \item Une couche de sortie contenant trois neurones.
+\end{itemize}
+
+\section{Description des couches du réseau}
+
+\subsection{Couche de convolution Conv2D}
+
+La couche Conv2D applique des filtres sur l'image
+afin de détecter des caractéristiques visuelles.
+
+Les premières couches peuvent apprendre à détecter
+des contours, des couleurs et des textures simples.
+Les couches suivantes permettent d'apprendre des motifs
+plus complexes.
+
+La convolution peut être représentée par :
+
+\[
+Y(i,j)=\sum_m\sum_n X(i-m,j-n)K(m,n)
+\]
+
+où $X$ représente l'image d'entrée, $K$ le filtre
+de convolution et $Y$ la carte de caractéristiques obtenue.
+
+\subsection{Couche MaxPooling2D}
+
+La couche MaxPooling2D réduit les dimensions spatiales
+des cartes de caractéristiques.
+
+Elle conserve les valeurs maximales dans des régions
+locales afin de réduire le nombre de calculs.
+
+Cette opération permet également de rendre le réseau
+moins sensible à certaines petites variations de position.
+
+\subsection{Couche Flatten}
+
+La couche Flatten transforme les cartes de caractéristiques
+en un vecteur unidimensionnel.
+
+Cette transformation permet de transmettre les
+informations extraites vers les couches entièrement
+connectées.
+
+\subsection{Couche Dense}
+
+La couche Dense est une couche entièrement connectée.
+
+Elle combine les caractéristiques extraites afin
+de déterminer les informations nécessaires à la
+classification.
+
+Le modèle de référence comprend une couche Dense
+de 64 neurones avec une fonction d'activation ReLU.
+
+La fonction ReLU est définie par :
+
+\[
+f(x)=\max(0,x)
+\]
+
+\subsection{Fonction Softmax}
+
+La couche de sortie utilise la fonction Softmax afin
+de produire une probabilité pour chaque classe.
+
+La formule est :
+
+\[
+P(y=i)=\frac{e^{z_i}}{\sum_{j=1}^{K}e^{z_j}}
+\]
+
+Dans notre projet, $K=3$, car le système distingue
+trois catégories.
+
+La classe ayant la probabilité la plus élevée
+correspond à la prédiction du modèle.
+
+\section{Résumé de l'architecture}
+
+Le tableau suivant présente les principaux composants
+de l'architecture étudiée.
+
+\begin{table}[H]
+\centering
+\caption{Principales couches du modèle CNN}
+\begin{tabularx}{\textwidth}{p{3.5cm}X}
+\toprule
+\textbf{Couche} & \textbf{Rôle}\\
+\midrule
+Resizing &
+Adapter les dimensions des images.\\
+
+Rescaling &
+Normaliser les valeurs des pixels.\\
+
+Conv2D &
+Extraire les caractéristiques visuelles.\\
+
+MaxPooling2D &
+Réduire les dimensions des cartes de caractéristiques.\\
+
+Flatten &
+Transformer les caractéristiques en vecteur.\\
+
+Dense &
+Combiner les caractéristiques pour la classification.\\
+
+Softmax &
+Produire les probabilités associées aux trois classes.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Configuration du modèle}
+
+Le modèle est construit avec TensorFlow et Keras.
+
+Les principaux paramètres de configuration sont présentés
+dans le tableau suivant.
+
+\begin{table}[H]
+\centering
+\caption{Configuration générale du modèle}
+\begin{tabular}{ll}
+\toprule
+\textbf{Paramètre} & \textbf{Valeur}\\
+\midrule
+Type de modèle & CNN\\
+Framework & TensorFlow / Keras\\
+Taille des images & 256 $\times$ 256\\
+Nombre de canaux & 3 (RGB)\\
+Batch size & 32\\
+Nombre de classes & 3\\
+Optimiseur & Adam\\
+Fonction de perte & Sparse Categorical Crossentropy\\
+Nombre d'époques & 50 (configuration de référence)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{Les valeurs doivent être vérifiées dans la version
+finale du notebook exécuté. Si les paramètres ont été
+modifiés pendant les expérimentations, le tableau doit
+être mis à jour.}
+
+\section{Entraînement du CNN}
+
+L'entraînement consiste à présenter progressivement
+les images au réseau afin qu'il apprenne à associer
+chaque image à sa catégorie.
+
+Au début, les paramètres du réseau sont initialisés.
+Le modèle réalise ensuite des prédictions et compare
+ses sorties avec les étiquettes réelles.
+
+L'erreur calculée est utilisée pour ajuster les poids
+du réseau à l'aide de l'algorithme de rétropropagation.
+
+Ce processus est répété pendant plusieurs époques
+jusqu'à ce que le modèle apprenne à reconnaître
+les caractéristiques associées aux différentes classes.
+
+\section{Fonction de perte}
+
+La fonction de perte mesure la différence entre les
+prédictions du modèle et les catégories réelles.
+
+Dans le projet, la fonction Sparse Categorical
+Crossentropy est utilisée pour la classification
+multi-classes lorsque les étiquettes sont représentées
+par des entiers.
+
+Elle peut être exprimée par :
+
+\[
+L=-\frac{1}{N}\sum_{i=1}^{N}
+\log(P(y_i))
+\]
+
+où $P(y_i)$ représente la probabilité attribuée
+par le modèle à la classe correcte de l'exemple $i$.
+
+\section{Optimiseur Adam}
+
+Adam est un algorithme d'optimisation utilisé pour
+mettre à jour les paramètres du réseau pendant
+l'entraînement.
+
+Il adapte les taux d'apprentissage à partir des
+estimations des moyennes et des variances des gradients.
+
+Son utilisation permet de faciliter la convergence
+du réseau et d'améliorer le processus d'apprentissage.
+
+\section{Sauvegarde du modèle}
+
+Après l'entraînement, le modèle peut être sauvegardé
+afin de pouvoir être réutilisé sans devoir recommencer
+tout le processus d'apprentissage.
+
+Le dépôt GitHub de référence contient notamment
+des modèles sauvegardés au format H5 ainsi que
+des éléments destinés à la conversion TensorFlow Lite.
+
+\section{Prédiction sur une nouvelle image}
+
+Une fois le modèle entraîné, une nouvelle image peut
+être fournie au système.
+
+Elle doit subir les mêmes opérations de prétraitement
+que les images d'entraînement, notamment le redimensionnement
+et la normalisation.
+
+Le modèle calcule ensuite les probabilités associées
+aux trois catégories.
+
+La classe correspondant à la probabilité la plus élevée
+est retournée comme résultat de classification.
+
+\[
+\hat{y}=\arg\max_{i\in\{1,2,3\}}P(y=i)
+\]
+
+Le résultat peut être présenté sous la forme suivante :
+
+\begin{itemize}
+    \item Potato Early Blight.
+    \item Potato Late Blight.
+    \item Potato Healthy.
+\end{itemize}
+
+%================================================
+% CHAPITRE 6
+%================================================
+
+\chapter{Évaluation des performances}
+
+\section{Objectif de l'évaluation}
+
+L'évaluation représente une étape essentielle dans
+un projet de classification.
+
+Elle permet de mesurer la capacité du modèle à reconnaître
+correctement les différentes catégories et à généraliser
+sur des images qui n'ont pas été utilisées pendant
+l'entraînement.
+
+Dans notre projet, l'évaluation doit permettre de vérifier
+si le CNN distingue correctement les feuilles saines
+des feuilles atteintes par l'Early Blight et le Late Blight.
+
+\section{Métriques d'évaluation}
+
+Plusieurs métriques sont utilisées pour évaluer
+les performances d'un modèle de classification.
+
+Dans un problème multi-classes, ces métriques peuvent
+être calculées pour chaque classe, puis agrégées.
+
+\subsection{Accuracy}
+
+L'Accuracy représente la proportion de prédictions
+correctes parmi l'ensemble des prédictions.
+
+\[
+Accuracy=\frac{\text{Nombre de prédictions correctes}}
+{\text{Nombre total de prédictions}}
+\]
+
+Une Accuracy élevée indique que le modèle réalise
+un grand nombre de prédictions correctes.
+
+\subsection{Precision}
+
+La Precision mesure la proportion des prédictions
+positives qui sont réellement positives.
+
+\[
+Precision=\frac{TP}{TP+FP}
+\]
+
+Elle permet d'évaluer la capacité du modèle à éviter
+les fausses alertes pour une classe donnée.
+
+\subsection{Recall}
+
+Le Recall mesure la proportion des exemples réellement
+positifs qui ont été correctement identifiés.
+
+\[
+Recall=\frac{TP}{TP+FN}
+\]
+
+Cette métrique est particulièrement importante dans
+la détection des maladies, car un faux négatif peut
+correspondre à une feuille malade classée comme saine.
+
+\subsection{F1-score}
+
+Le F1-score représente la moyenne harmonique entre
+Precision et Recall.
+
+\[
+F1=2\times
+\frac{Precision\times Recall}
+{Precision+Recall}
+\]
+
+Il permet de prendre en compte simultanément
+la précision et la capacité de détection.
+
+\subsection{Matrice de confusion}
+
+La matrice de confusion permet de comparer les
+classes réelles avec les classes prédites par le modèle.
+
+Elle permet d'identifier les erreurs entre les différentes
+catégories.
+
+Pour notre projet, elle contient trois lignes et
+trois colonnes correspondant aux classes suivantes :
+
+\begin{itemize}
+    \item Early Blight.
+    \item Late Blight.
+    \item Healthy.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Structure de la matrice de confusion}
+\begin{tabular}{lccc}
+\toprule
+\multirow{2}{*}{\textbf{Classe réelle}} &
+\multicolumn{3}{c}{\textbf{Classe prédite}}\\
+\cmidrule(lr){2-4}
+& Early Blight & Late Blight & Healthy\\
+\midrule
+Early Blight & & &\\
+Late Blight & & &\\
+Healthy & & &\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Les cases de la diagonale représentent les prédictions
+correctes. Les autres cases représentent les erreurs
+de classification.
+
+\section{Visualisation de l'apprentissage}
+
+L'évolution de l'Accuracy et de la Loss pendant
+l'entraînement permet d'observer le comportement
+du réseau.
+
+La courbe d'Accuracy permet de suivre l'évolution
+de la proportion de prédictions correctes.
+
+La courbe de Loss permet de suivre l'évolution
+de l'erreur du modèle.
+
+La comparaison entre les courbes d'entraînement
+et de validation permet notamment de détecter
+un éventuel surapprentissage.
+
+% Ajouter les graphiques obtenus après l'entraînement.
+%
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.8\textwidth]{accuracy.png}
+% \caption{Évolution de l'Accuracy}
+% \end{figure}
+%
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.8\textwidth]{loss.png}
+% \caption{Évolution de la fonction de perte}
+% \end{figure}
+
+\section{Analyse des résultats}
+
+Les résultats doivent être interprétés à partir des
+mesures réellement obtenues pendant les expérimentations.
+
+L'analyse ne doit pas se limiter à l'Accuracy globale.
+Il est également important d'étudier les performances
+pour chacune des trois catégories.
+
+Une attention particulière doit être accordée à la
+classe Healthy, car elle contient moins d'images que
+les deux catégories de maladies dans la version classique
+du dataset de 2\,152 images.
+
+Les résultats obtenus devront être présentés dans
+le tableau suivant.
+
+\begin{table}[H]
+\centering
+\caption{Résultats expérimentaux du modèle CNN}
+\begin{tabular}{lc}
+\toprule
+\textbf{Métrique} & \textbf{Valeur obtenue}\\
+\midrule
+Accuracy & À compléter\\
+Precision macro & À compléter\\
+Recall macro & À compléter\\
+F1-score macro & À compléter\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Aucune valeur ne doit être inventée. Les cases seront
+complétées après l'exécution et l'évaluation du modèle
+sur le jeu de test.
+
+\section{Limites du modèle}
+
+Malgré l'intérêt des réseaux CNN pour la classification
+des images, plusieurs limites doivent être prises
+en considération.
+
+\begin{itemize}
+    \item \textbf{Déséquilibre des classes :}
+    la différence du nombre d'images entre les catégories
+    peut influencer l'apprentissage.
+
+    \item \textbf{Variations des conditions de prise de vue :}
+    les images utilisées dans les datasets peuvent être
+    différentes des photographies prises directement
+    dans les champs.
+
+    \item \textbf{Arrière-plans :}
+    les feuilles photographiées dans des environnements
+    complexes peuvent présenter des difficultés
+    supplémentaires pour le modèle.
+
+    \item \textbf{Similarité des symptômes :}
+    certaines maladies peuvent présenter des caractéristiques
+    visuelles proches.
+
+    \item \textbf{Généralisation :}
+    un bon résultat sur un dataset ne garantit pas
+    nécessairement les mêmes performances sur des
+    images provenant d'autres environnements.
+\end{itemize}
+
+\section{Perspectives d'amélioration}
+
+Plusieurs améliorations peuvent être envisagées pour
+rendre le système plus complet.
+
+\begin{itemize}
+    \item Enrichir le dataset avec des photographies
+    prises dans des conditions agricoles réelles.
+
+    \item Étudier l'effet de différentes stratégies
+    de Data Augmentation.
+
+    \item Ajouter une méthode d'explicabilité comme
+    Grad-CAM afin de visualiser les régions importantes
+    pour la prédiction.
+
+    \item Ajouter un mécanisme de gestion des prédictions
+    incertaines.
+
+    \item Développer un module de recommandations
+    agricoles basé sur des sources scientifiques fiables.
+
+    \item Tester le modèle dans une application
+    permettant à l'utilisateur de télécharger une image
+    et d'obtenir une prédiction.
+\end{itemize}
+
+%================================================
+% CONCLUSION GENERALE
+%================================================
+
+\chapter*{Conclusion générale}
+\addcontentsline{toc}{chapter}{Conclusion générale}
+
+Ce projet s'inscrit dans le domaine de l'intelligence
+artificielle appliquée à l'agriculture et porte sur
+la classification automatique des maladies des feuilles
+de pomme de terre à partir d'images.
+
+L'objectif principal était d'étudier et de mettre en place
+une approche basée sur le Deep Learning afin de distinguer
+les feuilles atteintes par l'Early Blight, le Late Blight
+et les feuilles saines.
+
+Dans un premier temps, nous avons étudié le contexte
+du problème et les difficultés liées au diagnostic
+manuel des maladies végétales.
+
+Ensuite, l'étude de l'existant nous a permis d'examiner
+plusieurs travaux scientifiques récents utilisant
+des approches différentes, notamment Random Forest,
+le Transfer Learning et les architectures CNN.
+
+Cette comparaison a mis en évidence l'intérêt des
+réseaux de neurones convolutifs pour l'analyse automatique
+des caractéristiques visuelles des feuilles.
+
+Nous avons également présenté la méthodologie CRISP-DM
+et les principes de CRISP-ML(Q), qui permettent
+d'organiser les étapes de développement d'un projet
+de Machine Learning.
+
+La partie expérimentale repose sur la préparation
+des images, le redimensionnement, la normalisation
+et l'utilisation de techniques de Data Augmentation,
+notamment RandomFlip et RandomRotation.
+
+Le modèle étudié est un réseau CNN développé avec
+TensorFlow et Keras. Il a pour objectif de classifier
+les images en trois catégories.
+
+L'évaluation des performances permet de mesurer
+la capacité du réseau à réaliser cette classification
+et d'identifier ses éventuelles limites.
+
+Enfin, une perspective importante consiste à enrichir
+la classification par des informations complémentaires,
+telles que le niveau de confiance de la prédiction
+et des recommandations agricoles documentées.
+
+Ce travail constitue ainsi une base pour le développement
+de solutions intelligentes destinées à faciliter
+l'identification des maladies des plantes et à soutenir
+la prise de décision dans le domaine agricole.
+
+%================================================
+% BIBLIOGRAPHIE
+%================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{talab2024}
+H. K. Talab, D. Mohammadzamani et M. G. Parashkoohi,
+\textit{Investigating the accuracy of classification in
+unbalanced data in order to diagnose two common potato
+leaf diseases (early blight and late blight) using image
+processing and machine learning},
+Discover Applied Sciences, vol. 6, article 286, 2024.
+
+DOI :
+\url{https://doi.org/10.1007/s42452-024-05959-2}
+
+\bibitem{alhammad2025}
+S. M. Alhammad, D. S. Khafaga, W. M. El-hady,
+F. M. Samy et K. M. Hosny,
+\textit{Deep learning and explainable AI for classification
+of potato leaf diseases},
+Frontiers in Artificial Intelligence, 2025.
+
+DOI :
+\url{https://doi.org/10.3389/frai.2024.1449329}
+
+\bibitem{bhavani2026}
+G. D. Bhavani et M. M. V. Chalapathi,
+\textit{PotatoLeafNet: two-stage convolutional neural
+networks for effective Potato Leaf disease identification
+and classification},
+Frontiers in Artificial Intelligence, 2026.
+
+DOI :
+\url{https://doi.org/10.3389/frai.2025.1668839}
+
+\bibitem{codebasics}
+Codebasics,
+\textit{Potato Disease Classification: Training, REST APIs
+and Frontend to test},
+GitHub Repository.
+
+\url{https://github.com/codebasics/potato-disease-classification}
+
+\bibitem{plantix}
+Plantix,
+\textit{Plantix - Crop Diagnosis and Treatment Information}.
+
+\url{https://www.plantix.net/en/}
+
+\bibitem{agrio}
+Agrio,
+\textit{AI Agronomist and Plant Disease Identification}.
+
+\url{https://agrio.app/}
+
+\bibitem{tensorflow}
+TensorFlow,
+\textit{TensorFlow Documentation}.
+
+\url{https://www.tensorflow.org/}
+
+\bibitem{keras}
+Keras,
+\textit{Keras Documentation}.
+
+\url{https://keras.io/}
+
+\end{thebibliography}
+
+%================================================
+% WEBOGRAPHIE
+%================================================
+
+\chapter*{Webographie}
+\addcontentsline{toc}{chapter}{Webographie}
+
+\begin{itemize}
+    \item GitHub : \url{https://github.com/}
+    \item Kaggle : \url{https://www.kaggle.com/}
+    \item TensorFlow : \url{https://www.tensorflow.org/}
+    \item Keras : \url{https://keras.io/}
+    \item Plantix : \url{https://www.plantix.net/en/}
+    \item Agrio : \url{https://agrio.app/}
+\end{itemize}
+
+\end{document}
